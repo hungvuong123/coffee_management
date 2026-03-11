@@ -11,6 +11,7 @@ import { ReportMonthlyPage } from "../pages/ReportMonthlyPage";
 export default function Router() {
   return (
     <Routes>
+      <Route path="/" element={<TablesPage />} />
       <Route path="/tables" element={<TablesPage />} />
       <Route path="/products" element={<ProductPage />} />
       <Route path="/categories" element={<CategoryPage />} />

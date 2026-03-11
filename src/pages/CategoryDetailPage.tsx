@@ -113,7 +113,6 @@ useEffect(() => {
   return (
     <div className="product-list-wrapper">
       <p className="product-list-title">
-        Danh sách sản phẩm trong danh mục:{" "}
         <span style={{ color: "#ED1B2F" }}>{category?.name}</span>
       </p>
       <div className="add-product-btn">

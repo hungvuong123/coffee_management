@@ -1,0 +1,63 @@
+.product-list-wrapper {
+  padding: 32px;
+  .product-list-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .add-product-btn {
+    margin-bottom: 2rem;
+    text-align: end;
+    button {
+      width: 200px;
+      height: 48px;
+    }
+  }
+  .add-product-dialog {
+    .MuiDialogActions-root {
+      padding: 16px;
+    }
+  }
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    .product-card {
+      background-color: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 350px;
+      height: 300px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      .product-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        h3 {
+          text-align: center;
+        }
+        .product-image {
+          width: 150px;
+          height: 150px;
+          object-fit: cover;
+          border-radius: 100px;
+        }
+      }
+      .product-actions {
+        text-align: right;
+        margin-top: 8px;
+        margin-right: 8px;
+        svg {
+          color: #888;
+        }
+      }
+    }
+  }
+}

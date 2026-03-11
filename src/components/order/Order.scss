@@ -1,0 +1,50 @@
+.order-list-wrapper {
+  padding: 32px;
+  .order-list-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  .add-order-btn {
+    margin-bottom: 2rem;
+    text-align: end;
+    button {
+      width: 200px;
+      height: 48px;
+      margin-left: 16px;
+    }
+  }
+  .css-1gqmilo-MuiDataGrid-columnHeaderTitle{
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .total-price {
+    margin-top: 1rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: right;
+  }
+  .payment-order-btn {
+    margin-top: 1rem;
+    text-align: right;
+    button {
+      width: 150px;
+      height: 48px;
+      background-color: #ED1B2F;
+      color: #fff;
+    }
+  }
+  .order-list {
+    .order-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: start;
+      align-items: center;
+      height: 100%;
+      svg {
+        color: #888;
+      }
+    }
+  }
+}

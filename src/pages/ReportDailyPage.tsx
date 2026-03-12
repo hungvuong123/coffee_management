@@ -1,13 +1,19 @@
-import '../components/report-daily/Daily.scss';
+import "../components/report-daily/Daily.scss";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { useEffect, useState, type JSX } from 'react';
-import type { PickerValue } from '@mui/x-date-pickers/internals';
-import { getTableItemsByDate, type ReportOrder } from '../api/report';
-import DailyList from '../components/report-daily/DailyList';
-import dayjs from 'dayjs';
+import { useEffect, useState, type JSX } from "react";
+import type { PickerValue } from "@mui/x-date-pickers/internals";
+import {
+  getTableItemsByDate,
+  getVerifyCode,
+  REPORT_CODE_TYPE,
+  type ReportOrder,
+} from "../api/report";
+import DailyList from "../components/report-daily/DailyList";
+import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import { useSearchParams } from "react-router-dom";
+import VerifyCode from "../components/verify";
 
 export type ReportProduct = {
   id: number;
@@ -20,9 +26,14 @@ export function ReportDailyPage(): JSX.Element {
   const today = dayjs();
   const [searchParams] = useSearchParams();
   const date = searchParams.get("date");
-  console.log("date", date);
-  const [selectedDate, setSelectedDate] = useState<PickerValue | null>(date ? dayjs(date) : today);
+
+  const [selectedDate, setSelectedDate] = useState<PickerValue | null>(
+    date ? dayjs(date) : today,
+  );
+
   const [reportData, setReportData] = useState<ReportProduct[]>([]);
+  const [verified, setVerified] = useState<boolean>(false);
+  const [verifiedErr, setVerifiedErr] = useState<boolean>(false);
 
   const groupProductSales = (items: ReportOrder[]) => {
     const result: Record<string, ReportProduct> = {};
@@ -33,7 +44,7 @@ export function ReportDailyPage(): JSX.Element {
       if (!result[productId]) {
         result[productId] = {
           id: productId,
-          name: item.products?.name || '',
+          name: item.products?.name || "",
           quantity: 0,
           total: 0,
         };
@@ -54,15 +65,45 @@ export function ReportDailyPage(): JSX.Element {
 
   const handleDateChange = async (newValue: PickerValue): Promise<void> => {
     setSelectedDate(newValue);
-    if (newValue) {
+
+    if (newValue && verified) {
       await fetchData(newValue.format("DD/MM/YYYY"));
     }
   };
 
-  // load today khi vào page
+  const handleVerify = async (code: string) => {
+    const verifyCode = await getVerifyCode(REPORT_CODE_TYPE);
+    if (code === verifyCode.value) {
+      setVerified(true);
+    } else {
+      setVerifiedErr(true);
+    }
+  }
+
   useEffect(() => {
-    fetchData(selectedDate ? selectedDate.format("DD/MM/YYYY") : today.format("DD/MM/YYYY"));
-  }, []);
+    if (!verified) return;
+
+    fetchData(
+      selectedDate
+        ? selectedDate.format("DD/MM/YYYY")
+        : today.format("DD/MM/YYYY"),
+    );
+  }, [verified]);
+
+  if (!verified) {
+    return (
+      <div className="verify-wrapper">
+        <VerifyCode
+          onVerify={(code) => {
+            handleVerify(code);
+          }}
+        />
+        <div className="verify-error">
+          {verifiedErr ? "Mã xác thực không đúng. Vui lòng nhập lại" : null}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="daily-report-wrapper">
@@ -82,7 +123,6 @@ export function ReportDailyPage(): JSX.Element {
           </LocalizationProvider>
         </div>
         <div className="report-list">
-          {/* Hiển thị kết quả báo cáo ở đây */}
           <DailyList listData={reportData} />
         </div>
         <div className="total-price">

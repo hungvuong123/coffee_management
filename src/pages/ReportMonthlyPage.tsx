@@ -1,17 +1,25 @@
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import '../components/report-monthly/Monthly.scss';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { useEffect, useState } from 'react';
-import type { PickerValue } from '@mui/x-date-pickers/internals/models';
-import dayjs, { Dayjs } from 'dayjs';
-import { getMonthlyRevenue, type ReportMonthly } from '../api/report';
-import MonthlyList from '../components/report-monthly/MonthlyList';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import "../components/report-monthly/Monthly.scss";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useEffect, useState } from "react";
+import type { PickerValue } from "@mui/x-date-pickers/internals/models";
+import dayjs, { Dayjs } from "dayjs";
+import {
+  getMonthlyRevenue,
+  getVerifyCode,
+  REPORT_CODE_TYPE,
+  type ReportMonthly,
+} from "../api/report";
+import MonthlyList from "../components/report-monthly/MonthlyList";
 import "dayjs/locale/vi";
+import VerifyCode from "../components/verify";
 
 export function ReportMonthlyPage() {
   const today = dayjs();
   const [selectedMonth, setSelectedMonth] = useState<PickerValue | null>(today);
   const [reportData, setReportData] = useState<ReportMonthly[]>([]);
+  const [verified, setVerified] = useState<boolean>(false);
+  const [verifiedErr, setVerifiedErr] = useState<boolean>(false);
 
   const fetchData = async (month: dayjs.Dayjs) => {
     const formattedMonth = month.format("YYYY-MM") + "-01";
@@ -22,15 +30,39 @@ export function ReportMonthlyPage() {
   const handleMonthChange = async (value: Dayjs | null) => {
     setSelectedMonth(value);
 
-    if (value) {
+    if (value && verified) {
       await fetchData(value);
     }
   };
 
-  // load tháng hiện tại khi vào page
+  const handleVerify = async (code: string) => {
+    const verifyCode = await getVerifyCode(REPORT_CODE_TYPE);
+    if (code === verifyCode.value) {
+      setVerified(true);
+    } else {
+      setVerifiedErr(true);
+    }
+  };
+
   useEffect(() => {
+    if (!verified) return;
     fetchData(today);
-  }, []);
+  }, [verified]);
+
+  if (!verified) {
+    return (
+      <div className="verify-wrapper">
+        <VerifyCode
+          onVerify={(code) => {
+            handleVerify(code);
+          }}
+        />
+        <div className="verify-error">
+          {verifiedErr ? "Mã xác thực không đúng. Vui lòng nhập lại" : null}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="monthly-report-wrapper">
@@ -39,7 +71,7 @@ export function ReportMonthlyPage() {
       </div>
       <div className="monthly-report-content">
         <div className="date-picker-wrapper">
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='vi'>
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="vi">
             <DatePicker
               label="Chọn tháng"
               views={["year", "month"]}
@@ -50,7 +82,6 @@ export function ReportMonthlyPage() {
           </LocalizationProvider>
         </div>
         <div className="report-list">
-          {/* Hiển thị kết quả báo cáo ở đây */}
           <MonthlyList listData={reportData} />
         </div>
         <div className="total-price">

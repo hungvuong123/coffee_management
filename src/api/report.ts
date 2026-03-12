@@ -1,5 +1,7 @@
 import axiosClient from "./axios";
 
+export const REPORT_CODE_TYPE = "REPORT_CODE";
+
 export type ReportOrder = {
   id: number;
   product_id: number;
@@ -37,4 +39,14 @@ export const getMonthlyRevenue = async (month: string) => {
   });
 
   return res.data;
+};
+
+export const getVerifyCode = async (type: string) => {
+  const res = await axiosClient.get(`/config`, {
+    params: {
+      type: `eq.${type}`,
+    },
+  });
+
+  return res.data?.[0];
 };

@@ -12,20 +12,52 @@ interface OrderListProps {
 
 export default function OrderList({ orders, onEditOrder, onDeleteOrder, onSelectedRows }: OrderListProps) {
   const columns = [
-    { field: "product_name", headerName: "Sản phẩm", width: 300, renderCell: (params: { row: Order }) => {
-      const order = params.row;
-      return <div style={{ display: "flex", flexDirection: "column" }} className={order.is_paid ? "disable" : ""}>
-        <span>{order.product_name}</span>
-      </div>;
-    } },
-    { field: "quantity", headerName: "Số lượng", width: 100, renderCell: (params: { row: Order }) => {
-      const order = params.row;
-      return <span className={order.is_paid ? "disable" : ""}>{order.quantity}</span>;
-    } },
+    {
+      field: "product_name",
+      headerName: "Sản phẩm",
+      width: 300,
+      renderCell: (params: { row: Order }) => {
+        const order = params.row;
+        return (
+          <div
+            style={{ display: "flex", flexDirection: "column" }}
+            className={order.is_paid ? "disable" : ""}
+          >
+            <span>{order.product_name}</span>
+          </div>
+        );
+      },
+    },
+    {
+      field: "quantity",
+      headerName: "Số lượng",
+      width: 100,
+      renderCell: (params: { row: Order }) => {
+        const order = params.row;
+        return (
+          <span className={order.is_paid ? "disable" : ""}>
+            {order.quantity}
+          </span>
+        );
+      },
+    },
+    {
+      field: "product_price",
+      headerName: "Đơn giá",
+      width: 100,
+      renderCell: (params: { row: Order }) => {
+        const order = params.row;
+        return (
+          <span className={order.is_paid ? "disable" : ""}>
+            {order.product_price}
+          </span>
+        );
+      },
+    },
     {
       field: "price",
       headerName: "Giá",
-      width: 200,
+      width: 100,
       valueFormatter: (params: number) => {
         return params.toLocaleString("vi-VN") + " VND";
       },
@@ -36,12 +68,19 @@ export default function OrderList({ orders, onEditOrder, onDeleteOrder, onSelect
             {order.price.toLocaleString("vi-VN")} VND
           </span>
         );
-      }
+      },
     },
-    { field: "note", headerName: "Ghi chú", width: 300, renderCell: (params: { row: Order }) => {
-      const order = params.row;
-      return <span className={order.is_paid ? "disable" : ""}>{order.note}</span>;
-    } },
+    {
+      field: "note",
+      headerName: "Ghi chú",
+      width: 250,
+      renderCell: (params: { row: Order }) => {
+        const order = params.row;
+        return (
+          <span className={order.is_paid ? "disable" : ""}>{order.note}</span>
+        );
+      },
+    },
     {
       field: "actions",
       headerName: "Chức năng",

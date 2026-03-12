@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/logo.jpg";
 import "./Header.scss";
+import { Button } from "@mui/material";
 
 export default function Header() {
   return (
@@ -47,7 +48,15 @@ export default function Header() {
         </NavLink>
       </div>
 
-      <div className="header-right"></div>
+      <div className="header-right">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => window.location.reload()}
+        >
+          Tải lại trang
+        </Button>
+      </div>
     </div>
   );
 }

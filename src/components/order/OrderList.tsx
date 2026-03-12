@@ -44,12 +44,12 @@ export default function OrderList({ orders, onEditOrder, onDeleteOrder, onSelect
     {
       field: "product_price",
       headerName: "Đơn giá",
-      width: 100,
+      width: 150,
       renderCell: (params: { row: Order }) => {
         const order = params.row;
         return (
           <span className={order.is_paid ? "disable" : ""}>
-            {order.product_price}
+            {order.product_price?.toLocaleString("vi-VN")} VND
           </span>
         );
       },
@@ -57,7 +57,7 @@ export default function OrderList({ orders, onEditOrder, onDeleteOrder, onSelect
     {
       field: "price",
       headerName: "Giá",
-      width: 100,
+      width: 150,
       valueFormatter: (params: number) => {
         return params.toLocaleString("vi-VN") + " VND";
       },

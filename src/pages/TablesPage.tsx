@@ -43,6 +43,7 @@ export default function TablesPage() {
       await createTable({ name: tableName })
     }
 
+    setActionTableId(null);
     setTableName("");
     setOpen(false);
 
